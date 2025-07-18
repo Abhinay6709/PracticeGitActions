@@ -5,4 +5,8 @@ public class MyTest {
         Test test= new Test();
         test.intialialiseTest();
     }
+
+    public void start(){
+
+    }
 }
