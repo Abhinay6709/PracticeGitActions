@@ -1,0 +1,54 @@
+name: Epos runner
+
+on: [push, pull_request]
+
+
+jobs:
+    runs-on: windows-latest
+    timeout-minutes: 180
+#    env:
+#      browserType: ${{ github.event.inputs.chooseBrowserType }}
+
+    steps:
+      - name: Set screen resolution
+        run: |
+          Set-DisplayResolution -Width 1920 -Height 1080 -Force
+          sleep 5
+        shell: powershell
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Checkout base framework dependency
+        uses: actions/checkout@v3
+        with:
+          repository: Abhinay6709/PracticeGitActions
+          ref: PracticeGitActions
+          path: PracticeGitActions
+          token: ${{ secrets.ABHI_SECRET }}
+
+      - name: Set up JDK 19
+        uses: actions/setup-java@v3
+        with:
+          java-version: '19.0.1'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Verify Java Version
+        run: java -version && javac -version
+
+#      - name: Install base framework to local Maven repository
+#        run: |
+#          cd 360f-tech
+#          mvn clean install -DskipTests
+
+      - name: Build project framework and execute tests
+        run: |
+          mvn clean install
+        continue-on-error: true
+
+      - name: Upload extent reports to Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: extent-reports
+          path: reports
