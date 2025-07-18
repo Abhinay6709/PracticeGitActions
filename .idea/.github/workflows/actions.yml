@@ -4,6 +4,7 @@ on: [push, pull_request]
 
 
 jobs:
+  test:
     runs-on: windows-latest
     timeout-minutes: 180
 #    env:
